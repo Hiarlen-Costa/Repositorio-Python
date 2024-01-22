@@ -1,0 +1,77 @@
+import pygame
+from pygame.locals import*
+from tkinter import*
+from sys import exit
+import random
+
+
+
+pygame.init()
+tamx=640
+tamy=480
+x_cobra=0
+y_cobra=0
+fonte=pygame.font.SysFont("arial",40,True,True)
+pontos=0
+x_maça=random.randrange(10,630)
+y_maça=random.randrange(10,470)
+clock=pygame.time.Clock()
+tela=pygame.display.set_mode((tamx,tamy))
+pygame.display.set_caption("Snake Ass")
+lista_cobra=[]
+comprimento_da_cobra=5
+x_controle=10
+y_controle=0
+
+def aumenta_cobra(lista_cobra):
+   for posicao in lista_cobra:
+       corpo_da_cobra=pygame.draw.rect(tela,(0,0,255),(posicao[0],posicao[1],20,20))  
+       if len(lista_cobra)>comprimento_da_cobra:
+           del lista_cobra[0]
+while True:
+   mensagem=f"Pontos: {pontos}"
+   texto=fonte.render(mensagem, False, (0,0,255))      
+   clock.tick(20)
+   tela.fill((0,0,0))
+   
+   for event in pygame.event.get():
+       if event.type==QUIT:
+           pygame.quit()
+           exit()
+           
+       if event.type==KEYDOWN:
+           if event.key==K_UP:
+                x_controle=0
+                y_controle=-10
+           if event.key==K_DOWN:
+               x_controle=0
+               y_controle=+10 
+           if event.key==K_LEFT:
+              x_controle= -10
+              y_controle=0
+           if event.key==K_RIGHT:
+               x_controle= +10
+               y_controle=0
+   x_cobra=x_cobra+x_controle            
+   y_cobra=y_cobra+y_controle         
+   
+   pygame.display.update()
+   cobra=pygame.draw.rect(tela, (0,0,255),(x_cobra,y_cobra,20,20,))
+   maça=pygame.draw.circle(tela,(255,0,0),(x_maça,y_maça),(10))                 
+   if cobra.colliderect(maça):
+       pontos=pontos+1
+       x_maça=random.randrange(10,630)                
+       y_maça=random.randrange(10,470)             
+       comprimento_da_cobra=comprimento_da_cobra+4
+   if x_cobra>=640:
+       x_cobra=0
+   if x_cobra<=0:
+       x_cobra=640    
+   lista_cabeça=[]
+   lista_cabeça.append(x_cobra)
+   lista_cabeça.append(y_cobra)
+   lista_cobra.append(lista_cabeça)
+      
+   aumenta_cobra(lista_cobra)    
+   tela.blit(texto,(450,0))             
+   pygame.display.update()                
